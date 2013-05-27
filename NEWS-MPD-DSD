@@ -1,3 +1,7 @@
+27-May-2013
+- Fix for hang at the end of a song when using DoP with certain DSDIFF and DSF files
+  [thanks to Yoshitomo Araki for his suggested version of the fix!]
+
 26-May-2013
 - Initial import of stable MPD 0.17.4
 - DSF/DFF: Enable ID3 tag support

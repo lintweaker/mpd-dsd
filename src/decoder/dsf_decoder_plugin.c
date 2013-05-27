@@ -257,6 +257,11 @@ dsf_decode_chunk(struct decoder *decoder, struct input_stream *is,
 	const unsigned buffer_samples = buffer_frames * frame_size;
 	const size_t buffer_size = buffer_samples * sample_size;
 
+
+	/* For DoP data length needs to be a multiple of 2, otherwise MPD will hang
+	   at the end of the song */
+	chunk_size = (chunk_size / (channels * 2)) * (channels * 2);
+
 	while (chunk_size > 0) {
 		/* see how much aligned data from the remaining chunk
 		   fits into the local buffer */

@@ -4,8 +4,8 @@ AC_INIT(mpd, 0.17.4-DSD, musicpd-dev-team@lists.sourceforge.net)
 
 VERSION_MAJOR=0
 VERSION_MINOR=17
-VERSION_REVISION=0
-VERSION_EXTRA=0
+VERSION_REVISION=4
+VERSION_EXTRA=1
 
 AC_CONFIG_SRCDIR([src/main.c])
 AM_INIT_AUTOMAKE([foreign 1.11 dist-bzip2 dist-xz subdir-objects])
