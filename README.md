@@ -12,9 +12,10 @@ Enhancedments:
 - DSD128 playback with DoP using two stereo channels @ 176.4
 
 Fixes:
-- Hang when playing certain DFF files
+- MPD hang at the end of a song when playing certain DFF files
 - Pops at the end of certain DSF files
 
 Planned enhancements:
 - Re-introduce fast forward and rewind for both DSF and DFF files
+- Utilize DSD/DoP support provided by ALSA in kernel 3.6.10 and up
 
