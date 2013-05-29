@@ -8,12 +8,12 @@ MPD.
 Planned DSD playback enhancements and fixes:
 
 Enhancements:
-- DSD128 playback with DoP using one stereo channel @ 352.8
+- DSD128 playback with DoP using one stereo channel @ 352.8 [done]
 - DSD128 playback with DoP using two stereo channels @ 176.4
 
 Fixes:
-- MPD hangs at the end of a song when playing certain DFF files
-- Pops at the end of certain DSF files [status: debug version]
+- MPD hangs at the end of a song when playing certain DFF files [done]
+- Pops at the end of certain DSF files [done: debug version]
 
 Planned enhancements:
 - Re-introduce fast forward and rewind for both DSF and the DFF decoder
