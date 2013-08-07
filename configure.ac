@@ -1,6 +1,6 @@
 AC_PREREQ(2.60)
 
-AC_INIT(mpd, 0.17.4-DSD, musicpd-dev-team@lists.sourceforge.net)
+AC_INIT(mpd, 0.17.5-DSD, gtmkramer@xs4all.nl)
 
 VERSION_MAJOR=0
 VERSION_MINOR=17
@@ -22,6 +22,11 @@ dnl ---------------------------------------------------------------------------
 AC_PROG_CC_C99
 AC_PROG_CXX
 AC_PROG_RANLIB
+
+AN_MAKEVAR([AR], [AC_PROG_AR])
+AN_PROGRAM([ar], [AC_PROG_AR])
+AC_DEFUN([AC_PROG_AR], [AC_CHECK_TOOL(AR, ar, :)])
+AC_PROG_AR
 
 HAVE_CXX=yes
 if test x$CXX = xg++; then
@@ -1453,7 +1458,7 @@ if
 	test x$enable_fifo = xno &&
 	test x$enable_httpd_output = xno &&
 	test x$enable_jack = xno &&
-	test x$enable_mvp = xno; then
+	test x$enable_mvp = xno &&
 	test x$enable_openal = xno &&
 	test x$enable_oss = xno &&
 	test x$enable_osx = xno &&
@@ -1462,7 +1467,7 @@ if
 	test x$enable_recorder_output = xno &&
 	test x$enable_shout = xno &&
 	test x$enable_solaris_output = xno &&
-	test x$enable_winmm_output = xno &&
+	test x$enable_winmm_output = xno; then
 
 		AC_MSG_ERROR([No Audio Output types configured!])
 fi

@@ -1,7 +1,7 @@
 mpd-dsd
 =======
 
-Version of stable MPD 0.17.4 for fasttracking DSD playback development.
+Version of stable MPD 0.17.5 for fasttracking DSD playback development.
 Once development is complete the changes / enhancements will be submitted to
 MPD.
 
