@@ -1,3 +1,7 @@
+2-Sept-13
+- (re)added Rewind and Fast forward support for DSDIFF
+- removed debug messages for DSF 'fix for pop at the end of certain songs'
+
 7-August-13
 - Update to MPD 0.17.5
 

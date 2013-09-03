@@ -155,12 +155,7 @@ dsf_read_metadata(struct decoder *decoder, struct input_stream *is,
 	samplecnt = (((uint64_t)GUINT32_FROM_LE(dsf_fmt_chunk.scnt_high)) << 32) |
 		((uint64_t)GUINT32_FROM_LE(dsf_fmt_chunk.scnt_low));
 
-	g_warning("dsf_meta: samplecount for 1 channel is: %u\n", samplecnt);
-	g_warning("dsf_meta: samplecount total is: %u\n", samplecnt * 2);
-
 	uint64_t playable = samplecnt * 2 / 8;
-
-	g_warning("dsf_meta: playable 8-bit samples total is: %u\n", playable);
 
 	/* read the 'data' chunk of the DSF file */
 	struct dsf_data_chunk data_chunk;
@@ -182,13 +177,8 @@ dsf_read_metadata(struct decoder *decoder, struct input_stream *is,
 		return false;
 
 	/* JK 29-sep-12 */
-	g_warning("dfs_meta: data_size is: %u\n", data_size);
-
 	if (playable < data_size)
-	{
-		g_warning("dsf_meta: playable < data_size. Going to use playable\n");
 		metadata->chunk_size = playable;
-	}
 
 	metadata->channels = (unsigned) dsf_fmt_chunk.channelnum;
 	metadata->sample_rate = samplefreq;
