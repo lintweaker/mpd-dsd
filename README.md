@@ -20,5 +20,5 @@ Planned enhancements:
 - Utilize DSD/DoP support provided by ALSA in kernel 3.6.11 and up [*1]
 
 [*1] The current DoP implementation in kernel 3.6.11 seems to provide a incorrect/incompatible DoP
-format not compatible with commond DACs known to support DoP.
+format not compatible with common DACs known to support DoP.
 
