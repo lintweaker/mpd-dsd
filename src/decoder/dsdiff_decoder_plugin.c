@@ -65,6 +65,7 @@ struct dsdiff_metadata {
 	goffset id3_offset;
 	uint64_t id3_size;
 #endif
+	goffset data_offset;
 	/** offset for artist tag */
 	goffset diar_offset;
 	/** offset for title tag */
@@ -345,6 +346,7 @@ dsdiff_read_metadata(struct decoder *decoder, struct input_stream *is,
 			uint64_t chunk_size;
 			chunk_size = dsdiff_chunk_size(chunk_header);
 			metadata->chunk_size = chunk_size;
+			metadata->data_offset = is->offset;
 			return true;
 		} else {
 			/* ignore unknown chunk */
@@ -371,7 +373,8 @@ bit_reverse_buffer(uint8_t *p, uint8_t *end)
 static bool
 dsdiff_decode_chunk(struct decoder *decoder, struct input_stream *is,
 		    unsigned channels,
-		    uint64_t chunk_size)
+		    uint64_t chunk_size,
+		    goffset stream_start_offset)
 {
 	uint8_t buffer[8192];
 
@@ -384,6 +387,8 @@ dsdiff_decode_chunk(struct decoder *decoder, struct input_stream *is,
 	/* For DoP data length needs to be a multiple of 2, otherwise MPD
 	   will hang at the end of the song */
 	chunk_size = (chunk_size / (channels * 2)) * (channels * 2);
+
+	const uint64_t stream_end_offset = chunk_size + (uint64_t) stream_start_offset;
 
 	while (chunk_size > 0) {
 		/* see how much aligned data from the remaining chunk
@@ -406,6 +411,11 @@ dsdiff_decode_chunk(struct decoder *decoder, struct input_stream *is,
 
 		enum decoder_command cmd =
 			decoder_data(decoder, is, buffer, nbytes, 0);
+
+		GError *error = NULL;
+		goffset offset;
+		goffset curpos;
+
 		switch (cmd) {
 		case DECODE_COMMAND_NONE:
 			break;
@@ -416,9 +426,34 @@ dsdiff_decode_chunk(struct decoder *decoder, struct input_stream *is,
 
 		case DECODE_COMMAND_SEEK:
 
-			/* Not implemented yet */
-			decoder_seek_error(decoder);
-			break;
+			curpos = is->offset;
+
+			offset = (goffset) (stream_start_offset + ( 705600 *
+				 decoder_seek_where(decoder)));
+
+			if (offset < stream_start_offset)
+				offset = stream_start_offset;
+
+			if (offset > stream_end_offset)
+				offset = stream_end_offset;
+
+			if (offset < curpos)
+				chunk_size = chunk_size + (curpos - offset);
+			else
+				chunk_size = chunk_size - (offset - curpos);
+
+			if (input_stream_lock_seek(is, offset,
+						   SEEK_SET, &error))
+			{
+				decoder_command_finished(decoder);
+			}
+			else
+			{
+				g_warning("seeking failed: %s", error->message);
+				g_error_free(error);
+				decoder_seek_error(decoder);
+				break;
+			}
 		}
 	}
 	return dsdlib_skip(decoder, is, chunk_size);
@@ -453,7 +488,7 @@ dsdiff_stream_decode(struct decoder *decoder, struct input_stream *is)
 			 (float) metadata.sample_rate;
 
 	/* success: file was recognized */
-	decoder_initialized(decoder, &audio_format, false, songtime);
+	decoder_initialized(decoder, &audio_format, true, songtime);
 
 	/* every iteration of the following loop decodes one "DSD"
 	   chunk from a DFF file */
@@ -464,7 +499,8 @@ dsdiff_stream_decode(struct decoder *decoder, struct input_stream *is)
 		if (dsdlib_id_equals(&chunk_header.id, "DSD ")) {
 			if (!dsdiff_decode_chunk(decoder, is,
 						 metadata.channels,
-						 chunk_size))
+						 chunk_size,
+						 metadata.data_offset))
 					break;
 		} else {
 			/* ignore other chunks */

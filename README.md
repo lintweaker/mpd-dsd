@@ -13,9 +13,12 @@ Enhancements:
 
 Fixes:
 - MPD hangs at the end of a song when playing certain DFF files [done]
-- Pops at the end of certain DSF files [done: debug version]
+- Pops at the end of certain DSF files [done]
 
 Planned enhancements:
-- Re-introduce fast forward and rewind for both DSF and the DFF decoder
-- Utilize DSD/DoP support provided by ALSA in kernel 3.6.10 and up
+- Re-introduce fast forward and rewind for both DSF and the DFF decoder [done for DSDIFF]
+- Utilize DSD/DoP support provided by ALSA in kernel 3.6.11 and up [*1]
+
+[*1] The current DoP implementation in kernel 3.6.11 seems to provide a incorrect/incompatible DoP
+format not compatible with commond DACs known to support DoP.
 
